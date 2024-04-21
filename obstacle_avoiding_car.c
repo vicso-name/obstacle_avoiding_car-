@@ -73,3 +73,18 @@ void performAvoidanceManeuver(int &distanceRight, int &distanceLeft) {
   }
   stopMotors();
 }
+
+int lookInDirection(int angle) {
+  myservo.write(angle);
+  delay(LOOK_DELAY);
+  int distance = readPing();
+  myservo.write(SERVO_CENTER);
+  delay(RESPONSE_DELAY);
+  return distance;
+}
+
+int readPing() {
+  delay(PING_INTERVAL);
+  int cm = sonar.ping_cm();
+  return cm == 0 ? MAX_DISTANCE_READING : cm;
+}
