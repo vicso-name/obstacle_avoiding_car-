@@ -28,3 +28,48 @@ AF_DCMotor motors[4] = {
   {4, MOTOR34_1KHZ}
 };
 Servo myservo;
+
+// Globals
+boolean isMovingForward = false;
+int currentDistance = 100;
+
+void setup() {
+  myservo.attach(10);
+  myservo.write(SERVO_CENTER);
+  delay(2000);
+  currentDistance = readPing();
+}
+
+void loop() {
+  checkObstaclesAndNavigate();
+}
+
+void checkObstaclesAndNavigate() {
+  int distanceRight, distanceLeft;
+
+  delay(RESPONSE_DELAY);
+  if (currentDistance <= DISTANCE_THRESHOLD) {
+    performAvoidanceManeuver(distanceRight, distanceLeft);
+  } else {
+    moveForward();
+  }
+  currentDistance = readPing();
+}
+
+void performAvoidanceManeuver(int &distanceRight, int &distanceLeft) {
+  stopMotors();
+  moveBackward();
+  delay(RESPONSE_DELAY);
+  stopMotors();
+  delay(RESPONSE_DELAY);
+  
+  distanceRight = lookInDirection(SERVO_RIGHT);
+  distanceLeft = lookInDirection(SERVO_LEFT);
+
+  if (distanceRight >= distanceLeft) {
+    turnRight();
+  } else {
+    turnLeft();
+  }
+  stopMotors();
+}
