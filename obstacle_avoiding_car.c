@@ -18,3 +18,13 @@
 #define TURN_DELAY 500
 #define LOOK_DELAY 500
 #define MAX_DISTANCE_READING 250
+
+// Sensor and motor setup
+NewPing sonar(TRIG_PIN, ECHO_PIN, MAX_DISTANCE);
+AF_DCMotor motors[4] = {
+  {1, MOTOR12_1KHZ},
+  {2, MOTOR12_1KHZ},
+  {3, MOTOR34_1KHZ},
+  {4, MOTOR34_1KHZ}
+};
+Servo myservo;
