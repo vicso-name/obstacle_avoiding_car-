@@ -88,3 +88,50 @@ int readPing() {
   int cm = sonar.ping_cm();
   return cm == 0 ? MAX_DISTANCE_READING : cm;
 }
+
+void moveForward() {
+  setMotorDirection(FORWARD);
+  rampUpSpeed();
+}
+
+void moveBackward() {
+  setMotorDirection(BACKWARD);
+  rampUpSpeed();
+}
+
+void turnRight() {
+  motors[0].run(FORWARD);
+  motors[1].run(FORWARD);
+  motors[2].run(BACKWARD);
+  motors[3].run(BACKWARD);
+  delay(TURN_DELAY);
+  setMotorDirection(FORWARD);
+}
+
+void turnLeft() {
+  motors[0].run(BACKWARD);
+  motors[1].run(BACKWARD);
+  motors[2].run(FORWARD);
+  motors[3].run(FORWARD);
+  delay(TURN_DELAY);
+  setMotorDirection(FORWARD);
+}
+
+void setMotorDirection(uint8_t direction) {
+  for (int i = 0; i < 4; i++) {
+    motors[i].run(direction);
+  }
+}
+
+void stopMotors() {
+  setMotorDirection(RELEASE);
+}
+
+void rampUpSpeed() {
+  for (int speed = 0; speed <= MAX_SPEED; speed += MOTOR_SPEED_INCREMENT) {
+    for (int i = 0; i < 4; i++) {
+      motors[i].setSpeed(speed);
+      delay(MOTOR_STOP_DELAY);
+    }
+  }
+}
